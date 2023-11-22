@@ -8,7 +8,7 @@ file_paths = (
 )
 
 list_of_files=[]
-str_of_xlsx_extensions = ('XLSX, XLSM, XLSB, XLS, XLTX, XLTM, XLAM, VBA, BAS, FRM, FRX, CLS, CTL')
+str_of_xlsx_extensions = ('XLSX, XLSM, XLSB, XLS, XLTX, XLTM, XLAM, VBA, BAS, FRM, FRX')
 rows = file_paths.split(', ')
 for row in rows:
     file = row[row.rfind('/')+1:]
@@ -21,14 +21,20 @@ print(list_of_files)
 
 ###REGEX
 
-str_of_xlsx_extensions = 'XLSX|XLSM|XLSB|XLS|XLTX|XLTM|XLAM|VBA|BAS|FRM|FRX|CLS|CTL'
+str_of_xlsx_extensions = 'XLSX|XLSM|XLSB|XLS|XLTX|XLTM|XLAM|VBA|BAS|FRM|FRX'
 
-pattern = re.compile(rf'.+\.({str_of_xlsx_extensions})$', re.IGNORECASE)
 files_list = file_paths.split(', ')
-filtered_files = [file for file in files_list if pattern.match(file)]
+pattern_with_lower = re.compile(rf'.+\.({str_of_xlsx_extensions.lower()})$')                                          ###РАЗБИЛ НА 2 МАССИВА БЕЗ УСЛОВНОГО flags=re.IGNORECASE, ЧТОБЫ ИЗБЕЖАТЬ СИТУАЦИИ xlsX 
+pattern_without_lower = re.compile(rf'.+\.({str_of_xlsx_extensions})$')
 
-print(filtered_files)
+# Фильтрация списка файлов с учетом и без учета регистра
+filtered_files_lower = [file for file in files_list if pattern_with_lower.match(file)]
+filtered_files_no_lower = [file for file in files_list if pattern_without_lower.match(file)]
 
+# Объединение результатов
+combined_filtered_files = filtered_files_lower + filtered_files_no_lower
+
+print(combined_filtered_files)
 
 
 
