@@ -15,12 +15,12 @@ BEGIN
             FROM
                 Coach C
             JOIN 
-				(SELECT * FROM BridgeSwimmerCoach GROUP BY CoachID, SwimmerID) BSC                                                                  
-				ON C.CoachId = BSC.CoachID
+                (SELECT * FROM BridgeSwimmerCoach GROUP BY CoachID, SwimmerID) BSC 
+                ON C.CoachId = BSC.CoachID
             JOIN
                 Result R 
-				ON BSC.SwimmerID = R.SwimmerId
-        )a
+                ON BSC.SwimmerID = R.SwimmerId
+        ) a
         GROUP BY
             Coach
     )
