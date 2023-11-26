@@ -1,24 +1,24 @@
---Решил, что рангом тренера будет показатель лучшего места его пловцов
-
-
-WITH coach_rank AS (
-    SELECT 
-        c.CoachId,
-        c.FirstName,
-        c.LastName,
-        DENSE_RANK() OVER (PARTITION BY r.CompetitionId ORDER BY r.DeclaredTime ASC) AS rank_time
-    FROM 
-        RESULT r 
-    INNER JOIN 
-        Swimmer s ON r.SwimmerId = s.SwimmerId 
-    INNER JOIN 
-        Coach c ON s.CoachId = c.CoachId
-)
 SELECT 
-    CoachId,
-    CONCAT(FirstName, ' ', LastName) AS Coach,
-    MIN(rank_time) AS CoachRank
+    R.DeclaredTime,
+    R.Distanse,
+    R.Style,
+    BSC.SwimmerID,
+    R.CompetitionId,
+    C.CoachId,
+    C.FirstName,
+    C.LastName,
+    DENSE_RANK() OVER (PARTITION BY R.Distanse, R.Style, R.CompetitionID ORDER BY R.DeclaredTime) AS Result,
+    CONCAT(C.FirstName, ' ', C.LastName) AS Coach
 FROM 
-    coach_rank
-GROUP BY 
-    CoachId, FirstName, LastName
+    Coach C
+JOIN 
+    (SELECT * FROM BridgeSwimmerCoach GROUP BY CoachID, SwimmerID) BSC																		-- THE TABLE ISN'T CORRECT BECAUSE OF A LOT OF DUPLICATES
+    ON C.CoachId = BSC.CoachID
+JOIN 
+    Result R 
+    ON BSC.SwimmerID = R.SwimmerId
+ORDER BY 
+    R.CompetitionId,
+    R.Style,
+    R.Distanse,
+    Result;
