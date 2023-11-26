@@ -12,7 +12,7 @@ SELECT
 FROM 
     Coach C
 JOIN 
-    (SELECT * FROM BridgeSwimmerCoach GROUP BY CoachID, SwimmerID) BSC																		-- THE TABLE ISN'T CORRECT BECAUSE OF A LOT OF DUPLICATES
+    (SELECT * FROM BridgeSwimmerCoach GROUP BY CoachID, SwimmerID) BSC														--ДАННЫЕ В ТАБЛИЦЕ НЕКОРРЕКТНЫ ИЗ-ЗА ДУБЛИКАТОВ
     ON C.CoachId = BSC.CoachID
 JOIN 
     Result R 
