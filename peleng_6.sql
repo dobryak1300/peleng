@@ -62,15 +62,20 @@ BEGIN
     CLOSE CompetitionCursor
     DEALLOCATE CompetitionCursor
 
-	SELECT FirstName,
-           LastName,
-           CompetitionName,
-           YearComp,
-           WinnerComp,
-           WinnerYear
-	FROM (
-			SELECT ROW_NUMBER() OVER (PARTITION BY CompetitionName, YearComp, WinnerComp ORDER BY WinnerComp, WinnerYear) as num, * 
-			FROM @ResultTable 
-		  )A
-	WHERE A.num = 1
+    SELECT 
+        FirstName,
+        LastName,
+        CompetitionName,
+        YearComp,
+        WinnerComp,
+        WinnerYear
+    FROM (
+        SELECT 
+            ROW_NUMBER() OVER (PARTITION BY CompetitionName, YearComp, WinnerComp ORDER BY WinnerComp, WinnerYear) as num, 
+            * 
+        FROM @ResultTable 
+    ) A
+    WHERE A.num = 1
 END
+
+--EXEC GetWinners @CompetitionName = 'Summer Olympic Games', @YearComp = 2000
